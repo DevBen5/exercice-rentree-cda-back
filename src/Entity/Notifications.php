@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\NotificationsRepository;
+use App\Enum\NotificationType;
+use App\Enum\Priority;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\NotificationsRepository;
 
 #[ORM\Entity(repositoryClass: NotificationsRepository::class)]
 class Notifications
@@ -29,9 +31,6 @@ class Notifications
     #[ORM\Column]
     private ?\DateTimeImmutable $expires_at = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $action_url = null;
-
     #[ORM\Column]
     private ?int $recipient_id = null;
 
@@ -49,6 +48,12 @@ class Notifications
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updates_at = null;
+
+    #[ORM\Column(enumType: NotificationType::class)]
+    private ?NotificationType $type = null;
+
+    #[ORM\Column(enumType: Priority::class)]
+    private ?Priority $priority = null;
 
     public function getId(): ?int
     {
@@ -111,18 +116,6 @@ class Notifications
     public function setExpiresAt(\DateTimeImmutable $expires_at): static
     {
         $this->expires_at = $expires_at;
-
-        return $this;
-    }
-
-    public function getActionUrl(): ?string
-    {
-        return $this->action_url;
-    }
-
-    public function setActionUrl(string $action_url): static
-    {
-        $this->action_url = $action_url;
 
         return $this;
     }
@@ -195,6 +188,30 @@ class Notifications
     public function setUpdatesAt(\DateTimeImmutable $updates_at): static
     {
         $this->updates_at = $updates_at;
+
+        return $this;
+    }
+
+    public function getType(): ?NotificationType
+    {
+        return $this->type;
+    }
+
+    public function setType(NotificationType $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPriority(): ?Priority
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(Priority $priority): static
+    {
+        $this->priority = $priority;
 
         return $this;
     }
