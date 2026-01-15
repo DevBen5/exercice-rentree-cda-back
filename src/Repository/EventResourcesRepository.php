@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\RessourceAccess;
+use App\Entity\EventResources;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<RessourceAccess>
+ * @extends ServiceEntityRepository<EventResources>
  */
-class RessourceAccessRepository extends ServiceEntityRepository
+class EventResourcesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, RessourceAccess::class);
+        parent::__construct($registry, EventResources::class);
     }
 
     //    /**
-    //     * @return RessourceAccess[] Returns an array of RessourceAccess objects
+    //     * @return EventResources[] Returns an array of EventResources objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
+    //            ->orderBy('e.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?RessourceAccess
+    //    public function findOneBySomeField($value): ?EventResources
     //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

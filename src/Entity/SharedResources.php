@@ -2,11 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\SharedResourcesRepository;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\SharedResourcesRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SharedResourcesRepository::class)]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/v1/resources',
+            denormalizationContext: ['groups' => 'sharedResourcesNew:item']),
+        new Get(
+            uriTemplate: '/v1/resources/{id}',
+            normalizationContext: ['groups' => 'sharedResourcesId:item']),
+    ],
+)]
 class SharedResources
 {
     #[ORM\Id]
@@ -14,41 +29,61 @@ class SharedResources
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\OneToOne]
+    #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
+    public ResourceAccess $resourceAccess;
+
     #[ORM\Column(length: 255)]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ressource_type = null;
+    #[Groups(['sharedResourcesNew:item'])]
+    private ?string $resource_type = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?string $path = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?string $mime_type = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?int $size = null;
 
     #[ORM\Column]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?bool $is_public = null;
 
     #[ORM\Column]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?int $creator_id = null;
 
     #[ORM\Column]
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
     private ?int $parent_id = null;
 
     #[ORM\Column]
-    private array $metadata = [];
+    #[Groups(['sharedResourcesNew:item', 'sharedResourcesId:item'])]
+    private ?string $metadata = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -79,14 +114,14 @@ class SharedResources
         return $this;
     }
 
-    public function getRessourceType(): ?string
+    public function getResourceType(): ?string
     {
-        return $this->ressource_type;
+        return $this->resource_type;
     }
 
-    public function setRessourceType(string $ressource_type): static
+    public function setResourceType(string $resource_type): static
     {
-        $this->ressource_type = $ressource_type;
+        $this->resource_type = $resource_type;
 
         return $this;
     }
@@ -163,12 +198,12 @@ class SharedResources
         return $this;
     }
 
-    public function getMetadata(): array
+    public function getMetadata(): string
     {
         return $this->metadata;
     }
 
-    public function setMetadata(array $metadata): static
+    public function setMetadata(string $metadata): static
     {
         $this->metadata = $metadata;
 

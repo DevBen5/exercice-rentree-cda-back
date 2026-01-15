@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\EventRessourcesRepository;
+use App\Repository\EventResourcesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EventRessourcesRepository::class)]
-class EventRessources
+#[ORM\Entity(repositoryClass: EventResourcesRepository::class)]
+class EventResources
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,7 +17,7 @@ class EventRessources
     private ?int $event_id = null;
 
     #[ORM\Column]
-    private ?int $ressource_id = null;
+    private ?int $resource_id = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -42,14 +42,14 @@ class EventRessources
         return $this;
     }
 
-    public function getRessourceId(): ?int
+    public function getResourceId(): ?int
     {
-        return $this->ressource_id;
+        return $this->resource_id;
     }
 
-    public function setRessourceId(int $ressource_id): static
+    public function setResourceId(int $resource_id): static
     {
-        $this->ressource_id = $ressource_id;
+        $this->resource_id = $resource_id;
 
         return $this;
     }

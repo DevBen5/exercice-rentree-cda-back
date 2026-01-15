@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -48,6 +50,17 @@ class User implements UserInterface
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
+
+    /**
+     * @var Collection<int, ResourceAccess>
+     */
+    #[ORM\ManyToMany(targetEntity: ResourceAccess::class, mappedBy: 'user_id')]
+    private Collection $resourceAccesses;
+
+    public function __construct()
+    {
+        $this->resourceAccesses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -190,6 +203,33 @@ class User implements UserInterface
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResourceAccess>
+     */
+    public function getResourceAccesses(): Collection
+    {
+        return $this->resourceAccesses;
+    }
+
+    public function addResourceAccess(ResourceAccess $resourceAccess): static
+    {
+        if (!$this->resourceAccesses->contains($resourceAccess)) {
+            $this->resourceAccesses->add($resourceAccess);
+            $resourceAccess->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResourceAccess(ResourceAccess $resourceAccess): static
+    {
+        if ($this->resourceAccesses->removeElement($resourceAccess)) {
+            $resourceAccess->removeUserId($this);
+        }
 
         return $this;
     }
