@@ -4,7 +4,6 @@ namespace App\Entity;
 
 
 use App\Entity\User;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use App\Entity\SharedResources;
@@ -61,11 +60,7 @@ class ResourceAccess
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, inversedBy: 'resourceAccesses')]
-    #[Groups(['resourceAccessNew:item'])]
+    #[ORM\Column]
     private Collection $user_id;
 
     public function __construct()
